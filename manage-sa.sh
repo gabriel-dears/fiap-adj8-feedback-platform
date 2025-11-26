@@ -112,7 +112,8 @@ create_sa sa-deploy-notify-admin "SA Deploy - Notify Admin"
 add_roles sa-deploy-notify-admin@$PROJECT_ID.iam.gserviceaccount.com \
   roles/cloudfunctions.developer \
   roles/pubsub.admin \
-  roles/logging.viewer
+  roles/logging.viewer \
+  roles/storage.admin
 
 create_key sa-deploy-notify-admin@$PROJECT_ID.iam.gserviceaccount.com
 
@@ -125,7 +126,8 @@ add_roles sa-deploy-weekly-report@$PROJECT_ID.iam.gserviceaccount.com \
   roles/cloudfunctions.developer \
   roles/pubsub.admin \
   roles/cloudscheduler.admin \
-  roles/logging.viewer
+  roles/logging.viewer \
+  roles/storage.admin
 
 create_key sa-deploy-weekly-report@$PROJECT_ID.iam.gserviceaccount.com
 
