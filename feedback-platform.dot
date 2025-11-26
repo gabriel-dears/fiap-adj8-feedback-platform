@@ -1,0 +1,20 @@
+digraph FeedbackPlatformFlow {
+  rankdir=LR;
+  node [shape=box, style=rounded];
+
+  App [label="Feedback App"];
+
+  PubSubAlerts [label="Pub/Sub: feedback-alerts"];
+  Notify [label="Notify Admin Function"];
+
+  Scheduler [label="Cloud Scheduler (Dom 00:00)"];
+  PubSubWeekly [label="Pub/Sub: weekly-feedback-reports"];
+  Weekly [label="Weekly Report Function"];
+
+  App -> PubSubAlerts [label="Publica feedback urgente"];
+  PubSubAlerts -> Notify;
+
+  Scheduler -> PubSubWeekly [label="Trigger semanal"];
+  PubSubWeekly -> Weekly;
+  Weekly -> App [label="Consulta via REST"];
+}
