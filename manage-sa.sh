@@ -96,10 +96,13 @@ add_roles sa-deploy-feedback-app@$PROJECT_ID.iam.gserviceaccount.com \
   roles/appengine.serviceAdmin \
   roles/storage.admin \
   roles/logging.viewer \
+  roles/logging.logWriter \
   roles/serviceusage.serviceUsageViewer \
   roles/viewer \
   roles/cloudbuild.builds.editor \
-  roles/iam.serviceAccountTokenCreator
+  roles/iam.serviceAccountTokenCreator \
+  roles/cloudsql.client \
+  roles/secretmanager.secretAccessor
 
 
 create_key sa-deploy-feedback-app@$PROJECT_ID.iam.gserviceaccount.com
