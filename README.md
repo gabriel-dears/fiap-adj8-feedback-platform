@@ -150,6 +150,8 @@ Requer a key da Service Account de infraestrutura (`sa-infra-key.json`).
 
 ---
 
+# **Execução**
+
 ## Como Buildar Tudo
 
 ### 1. Criar Service Accounts (opcional)
@@ -173,6 +175,20 @@ mvn clean install
 ### 4. Deploy
 
 Cada módulo pode ser deployado individualmente utilizando seus próprios scripts ou comandos via Maven / gcloud.
+
+**Para rodar os scripts the deploy de cada sub projeto, entre na raiz do projeto**
+
+**Mas acesse o README de cada sub projeto para entender as configurações antes de executar o script de deploy**
+
+- Por exemplo (partindo do diretório raiz que encapsula todos):
+```bash
+cd fiap-adj8-feedback-app
+./deploy.sh
+cd functions/fiap-adj8-feedback-notify-admin-function
+./deploy.sh
+cd functions/fiap-adj8-feedback-weekly-report-function
+./deploy.sh
+```
 
 ---
 
