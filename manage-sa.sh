@@ -171,12 +171,38 @@ create_key sa-runtime-weekly-report@$PROJECT_ID.iam.gserviceaccount.com
 APPENGINE_SA="$PROJECT_ID@appspot.gserviceaccount.com"
 DEPLOY_SA="sa-deploy-feedback-app@$PROJECT_ID.iam.gserviceaccount.com"
 
+NOTIFY_DEPLOY_SA="sa-deploy-notify-admin@$PROJECT_ID.iam.gserviceaccount.com"
+WEEKLY_REPORT_DEPLOY_SA="sa-deploy-weekly-report@$PROJECT_ID.iam.gserviceaccount.com"
+PROJECT_NUMBER=$(gcloud projects describe "$PROJECT_ID" --format="value(projectNumber)")
+COMPUTE_SA="$PROJECT_NUMBER-compute@developer.gserviceaccount.com"
+
 echo "🔗 Permitindo que $DEPLOY_SA atue como $APPENGINE_SA"
 
 gcloud iam service-accounts add-iam-policy-binding "$APPENGINE_SA" \
   --member="serviceAccount:$DEPLOY_SA" \
   --role="roles/iam.serviceAccountUser" \
   --quiet
+
+############################################
+# PERMITIR QUE A SA DE DEPLOY NOTIFY SE ASSUMA
+############################################
+
+echo "🔗 Permitindo que $NOTIFY_DEPLOY_SA atue como $COMPUTE_SA"
+
+gcloud iam service-accounts add-iam-policy-binding "$COMPUTE_SA" \
+  --member="serviceAccount:$NOTIFY_DEPLOY_SA" \
+  --role="roles/iam.serviceAccountUser" \
+  --quiet
+
+
+echo "🔗 Permitindo que $WEEKLY_REPORT_DEPLOY_SA atue como $COMPUTE_SA"
+
+gcloud iam service-accounts add-iam-policy-binding "$COMPUTE_SA" \
+  --member="serviceAccount:$WEEKLY_REPORT_DEPLOY_SA" \
+  --role="roles/iam.serviceAccountUser" \
+  --quiet
+
+
 
 echo "✅ Todas as Service Accounts e suas keys foram criadas com sucesso!"
 echo "📁 Keys armazenadas em: $KEYS_DIR"
