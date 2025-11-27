@@ -1,5 +1,3 @@
-# FIAP ADJ8 – Feedback Platform
-
 ## Visão Geral do Projeto
 
 O **FIAP ADJ8 Feedback Platform** é uma plataforma modular e escalável para coleta, gestão e monitoramento de feedbacks de alunos. Ela engloba três subprojetos principais, cada um com responsabilidades claras, permitindo automação de notificações e geração de relatórios semanais.
@@ -27,7 +25,49 @@ O projeto segue **arquitetura hexagonal**, garantindo separação de responsabil
 
 ## Arquitetura Geral
 
-![Imagem da Arquitetura Geral](path/to/general_architecture.png)
+![Arquitetura Principal](feedback-platform.png)
+
+A arquitetura apresentada segue um modelo **event-driven** com componentes **serverless** e mensageria **Pub/Sub** para integração entre funções e aplicações. A sequência de operação é a seguinte:
+
+### Cloud Scheduler
+
+- Um job é agendado para execução semanal, especificamente todo domingo às 00:00.
+- O Scheduler dispara eventos de forma programática e confiável, sem necessidade de servidores dedicados.
+
+### Pub/Sub: `weekly-feedback-reports`
+
+- O evento disparado pelo Cloud Scheduler é publicado em um tópico Pub/Sub chamado `weekly-feedback-reports`.
+- Este tópico atua como um **broker de mensagens**, desacoplando o disparo do evento da execução da função que processa o relatório semanal.
+
+### Weekly Report Function
+
+- Uma **Cloud Function** que consome mensagens do tópico `weekly-feedback-reports`.
+- Essa função gera ou agrega relatórios semanais baseados nos dados de feedback recebidos.
+- Após o processamento, a função disponibiliza os resultados para consumo do **Feedback App** via **REST API**.
+
+### Feedback App
+
+- Aplicação central que armazena e gerencia todos os feedbacks dos usuários.
+- Consome os relatórios gerados pela **Weekly Report Function** via chamadas REST.
+- Identifica feedbacks urgentes ou críticos que precisam de atenção imediata.
+
+### Pub/Sub: `feedback-alerts`
+
+- Quando o **Feedback App** detecta feedbacks urgentes, ele publica eventos em um tópico Pub/Sub chamado `feedback-alerts`.
+- Esse tópico serve para propagar **alertas críticos** de forma assíncrona e confiável.
+
+### Notify Admin Function
+
+- Função **serverless** que consome mensagens do tópico `feedback-alerts`.
+- Responsável por enviar notificações ou alertas imediatos para os administradores, garantindo resposta rápida a feedbacks críticos.
+
+## Características e Benefícios
+
+- **Arquitetura desacoplada:** Uso de Pub/Sub evita acoplamento direto entre produtores e consumidores.
+- **Serverless:** Funções e agendamento não exigem infraestrutura dedicada, garantindo escalabilidade automática.
+- **Event-driven:** Todo o fluxo é baseado em eventos (Scheduler → Pub/Sub → Functions → App → Alerts).
+- **Segurança e permissões:** Cada função e serviço interage via **Service Accounts** específicas, garantindo **least privilege** e rastreabilidade.
+- **Automatização de relatórios e alertas:** O sistema permite gerar relatórios periódicos e disparar alertas críticos sem intervenção manual.
 
 ---
 
@@ -50,7 +90,7 @@ O **Feedback App** é uma aplicação Spring Boot responsável pelo envio, consu
 - Feedbacks marcados como urgentes são enviados para Pub/Sub (`feedback-alerts`) e consumidos pela função Notify Admin.
 - A função Weekly Report consulta dados via REST para gerar relatórios semanais.
 
-![Imagem Fluxo Feedback App](path/to/feedback_app.png)
+![Feedback App](fiap-adj8-feedback-app/feedback-app.png)
 
 ---
 
@@ -71,7 +111,7 @@ A **Notify Admin Function** é uma função do GCP responsável por enviar notif
 2. Pub/Sub aciona a função Notify Admin
 3. Função envia email para administradores
 
-![Imagem Fluxo Notify Admin](path/to/notify_admin.png)
+![Notify Admin Function](functions/fiap-adj8-feedback-notify-admin-function/notify_admin.png)
 
 ---
 
@@ -94,7 +134,7 @@ A **Weekly Report Function** gera relatórios semanais de feedbacks para adminis
 3. Função consome mensagem, consulta Feedback App e gera relatório
 4. Relatório enviado para administradores
 
-![Imagem Fluxo Weekly Report](path/to/weekly_report.png)
+![Weekly Report Function](functions/fiap-adj8-feedback-weekly-report-function/weekly_report.png)
 
 ---
 
@@ -152,14 +192,15 @@ Copy code
 | SA | Função / Propósito | Roles Principais | Observações |
 |----|------------------|-----------------|------------|
 | `sa-infra` | Provisionamento de infraestrutura (Cloud SQL, App Engine, Artifact Registry, Compute, etc.) | cloudsql.admin, artifactregistry.admin, pubsub.admin, cloudscheduler.admin, iam.serviceAccountUser, resourcemanager.projectIamAdmin, compute.networkAdmin, iam.securityAdmin, editor | Usada para criar recursos e configurar permissões de outros SAs. |
-| `sa-deploy-feedback-app` | Deploy da aplicação Feedback App | appengine.deployer, artifactregistry.reader, appengine.serviceAdmin, storage.admin, logging.viewer/logWriter, serviceusage.serviceUsageViewer, cloudbuild.builds.editor, iam.serviceAccountTokenCreator, cloudsql.client, secretmanager.secretAccessor | Necessário para build e push de Docker, deploy no App Engine e acesso a segredos. |
-| `sa-deploy-notify-admin` | Deploy da função Cloud Function `notify-admin` | cloudfunctions.developer, pubsub.admin, logging.viewer, storage.admin | Deploy da função que envia alertas por e-mail; precisa criar/atualizar tópicos Pub/Sub. |
-| `sa-deploy-weekly-report` | Deploy da função Cloud Function `weekly-report` | cloudfunctions.developer, pubsub.admin, cloudscheduler.admin, logging.viewer, storage.admin | Deploy da função de geração de relatórios semanais; precisa criar tópicos Pub/Sub e jobs do Scheduler. |
-| `sa-runtime-feedback-app` | Runtime Feedback App | cloudsql.client, pubsub.publisher, logging.logWriter | Executa a aplicação em produção; publica mensagens em tópicos Pub/Sub e conecta ao Cloud SQL. |
-| `sa-runtime-notify-admin` | Runtime Notify Admin | pubsub.subscriber, logging.logWriter | Função recebe mensagens de alertas e envia e-mails; consome tópicos Pub/Sub. |
-| `sa-runtime-weekly-report` | Runtime Weekly Report | pubsub.publisher, logging.logWriter | Função publica mensagens de relatórios semanais; consome Cloud Scheduler e envia logs. |
+| `sa-deploy-feedback-app` | Deploy da aplicação Feedback App | appengine.deployer, artifactregistry.reader, appengine.serviceAdmin, storage.admin, logging.viewer/logWriter, serviceusage.serviceUsageViewer, cloudbuild.builds.editor, iam.serviceAccountTokenCreator, cloudsql.client, secretmanager.secretAccessor | Necessário para build e push de Docker,<br>deploy no App Engine e acesso a segredos. |
+| `sa-deploy-notify-admin` | Deploy da função Cloud Function `notify-admin` | cloudfunctions.developer, pubsub.admin, logging.viewer, storage.admin | Deploy da função que envia alertas por e-mail;<br>precisa criar/atualizar tópicos Pub/Sub. |
+| `sa-deploy-weekly-report` | Deploy da função Cloud Function `weekly-report` | cloudfunctions.developer, pubsub.admin, cloudscheduler.admin, logging.viewer, storage.admin | Deploy da função de geração de relatórios semanais;<br>precisa criar tópicos Pub/Sub e jobs do Scheduler. |
+| `sa-runtime-feedback-app` | Runtime Feedback App | cloudsql.client, pubsub.publisher, logging.logWriter | Executa a aplicação em produção;<br>publica mensagens em tópicos Pub/Sub e conecta ao Cloud SQL. |
+| `sa-runtime-notify-admin` | Runtime Notify Admin | pubsub.subscriber, logging.logWriter | Função recebe mensagens de alertas e envia e-mails;<br>consome tópicos Pub/Sub. |
+| `sa-runtime-weekly-report` | Runtime Weekly Report | pubsub.publisher, logging.logWriter | Função publica mensagens de relatórios semanais;<br>consome Cloud Scheduler e envia logs. |
 
 ---
+
 
 ## Sessão de Provisionamento e Interação com GCP
 
@@ -196,6 +237,8 @@ Os detalhes de cada comando, criação de SAs, provisionamento de infra e deploy
 - `manage-sa.sh` (root)
 - `infra.sh` (root)
 - `deploy.sh` em cada projeto correspondente
+
+### PARA DETALHES MAIS TÉCNICOS, visualize o README.md de cada projeto, partindo de: [README.md](README.md)
 
 ## Clonagem do Repositório e Atualização com Submodules
 

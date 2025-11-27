@@ -45,6 +45,8 @@ mvn clean install
 
 ## Subprojetos
 
+**Para mais detalhes de cada subprojeto, visualizar o README.md na raiz de cada um deles.**
+
 ### 1. Feedback App
 
 * Spring Boot + Cloud SQL (PostgreSQL)

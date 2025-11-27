@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Gabriel de Alcantara Rodrigues Soares - RM363700" />
+  <title>TECH CHALLENGE - FASE 04</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">TECH CHALLENGE - FASE 04</h1>
+<p class="author">Gabriel de Alcantara Rodrigues Soares - RM363700</p>
+</header>
+<section id="fiap"
+style="text-align: center; margin-top: 200px; font-family: Arial, sans-serif;">
+<h1>FIAP</h1>
+<h2 id="arquitetura-e-desenvolvimento-em-java">Arquitetura e
+Desenvolvimento em Java</h2>
+<p><br><br><br></p>
+</section>
+<!-- Quebra de página -->
+<div style="page-break-after: always;">
+
+</div>
+<h2 id="visão-geral-do-projeto">Visão Geral do Projeto</h2>
+<p>O <strong>FIAP ADJ8 Feedback Platform</strong> é uma plataforma
+modular e escalável para coleta, gestão e monitoramento de feedbacks de
+alunos. Ela engloba três subprojetos principais, cada um com
+responsabilidades claras, permitindo automação de notificações e geração
+de relatórios semanais.</p>
+<p>O projeto segue <strong>arquitetura hexagonal</strong>, garantindo
+separação de responsabilidades entre domínio, aplicação e
+infraestrutura, facilitando manutenção, testes e evolução futura.</p>
+<h3 id="objetivos-principais">Objetivos Principais</h3>
+<ul>
+<li>Centralizar o gerenciamento de feedbacks de alunos</li>
+<li>Notificar administradores sobre feedbacks urgentes</li>
+<li>Gerar relatórios semanais automatizados</li>
+<li>Fornecer APIs REST para consulta e integração</li>
+<li>Garantir segurança via roles e autenticação HTTP Basic</li>
+</ul>
+<h3 id="tecnologias-e-ferramentas">Tecnologias e Ferramentas</h3>
+<ul>
+<li><strong>Linguagem:</strong> Java 17 / 21</li>
+<li><strong>Frameworks:</strong> Spring Boot 3, Google Cloud Functions
+Framework</li>
+<li><strong>Banco de Dados:</strong> PostgreSQL 16 (Cloud SQL)</li>
+<li><strong>Serviços GCP:</strong> App Engine, Cloud Functions, Pub/Sub,
+Cloud Scheduler, Artifact Registry</li>
+<li><strong>Gerenciamento de Builds:</strong> Maven Multi-módulo</li>
+<li><strong>Outros:</strong> Shell scripts para gerenciamento de Service
+Accounts e infraestrutura, Flyway para versionamento de banco</li>
+</ul>
+<hr />
+<h2 id="arquitetura-geral">Arquitetura Geral</h2>
+<figure>
+<img src="feedback-platform.png" alt="Arquitetura Principal" />
+<figcaption aria-hidden="true">Arquitetura Principal</figcaption>
+</figure>
+<p>A arquitetura apresentada segue um modelo
+<strong>event-driven</strong> com componentes
+<strong>serverless</strong> e mensageria <strong>Pub/Sub</strong> para
+integração entre funções e aplicações. A sequência de operação é a
+seguinte:</p>
+<h3 id="cloud-scheduler">Cloud Scheduler</h3>
+<ul>
+<li>Um job é agendado para execução semanal, especificamente todo
+domingo às 00:00.</li>
+<li>O Scheduler dispara eventos de forma programática e confiável, sem
+necessidade de servidores dedicados.</li>
+</ul>
+<h3 id="pubsub-weekly-feedback-reports">Pub/Sub:
+<code>weekly-feedback-reports</code></h3>
+<ul>
+<li>O evento disparado pelo Cloud Scheduler é publicado em um tópico
+Pub/Sub chamado <code>weekly-feedback-reports</code>.</li>
+<li>Este tópico atua como um <strong>broker de mensagens</strong>,
+desacoplando o disparo do evento da execução da função que processa o
+relatório semanal.</li>
+</ul>
+<h3 id="weekly-report-function">Weekly Report Function</h3>
+<ul>
+<li>Uma <strong>Cloud Function</strong> que consome mensagens do tópico
+<code>weekly-feedback-reports</code>.</li>
+<li>Essa função gera ou agrega relatórios semanais baseados nos dados de
+feedback recebidos.</li>
+<li>Após o processamento, a função disponibiliza os resultados para
+consumo do <strong>Feedback App</strong> via <strong>REST
+API</strong>.</li>
+</ul>
+<h3 id="feedback-app">Feedback App</h3>
+<ul>
+<li>Aplicação central que armazena e gerencia todos os feedbacks dos
+usuários.</li>
+<li>Consome os relatórios gerados pela <strong>Weekly Report
+Function</strong> via chamadas REST.</li>
+<li>Identifica feedbacks urgentes ou críticos que precisam de atenção
+imediata.</li>
+</ul>
+<h3 id="pubsub-feedback-alerts">Pub/Sub:
+<code>feedback-alerts</code></h3>
+<ul>
+<li>Quando o <strong>Feedback App</strong> detecta feedbacks urgentes,
+ele publica eventos em um tópico Pub/Sub chamado
+<code>feedback-alerts</code>.</li>
+<li>Esse tópico serve para propagar <strong>alertas críticos</strong> de
+forma assíncrona e confiável.</li>
+</ul>
+<h3 id="notify-admin-function">Notify Admin Function</h3>
+<ul>
+<li>Função <strong>serverless</strong> que consome mensagens do tópico
+<code>feedback-alerts</code>.</li>
+<li>Responsável por enviar notificações ou alertas imediatos para os
+administradores, garantindo resposta rápida a feedbacks críticos.</li>
+</ul>
+<h2 id="características-e-benefícios">Características e Benefícios</h2>
+<ul>
+<li><strong>Arquitetura desacoplada:</strong> Uso de Pub/Sub evita
+acoplamento direto entre produtores e consumidores.</li>
+<li><strong>Serverless:</strong> Funções e agendamento não exigem
+infraestrutura dedicada, garantindo escalabilidade automática.</li>
+<li><strong>Event-driven:</strong> Todo o fluxo é baseado em eventos
+(Scheduler → Pub/Sub → Functions → App → Alerts).</li>
+<li><strong>Segurança e permissões:</strong> Cada função e serviço
+interage via <strong>Service Accounts</strong> específicas, garantindo
+<strong>least privilege</strong> e rastreabilidade.</li>
+<li><strong>Automatização de relatórios e alertas:</strong> O sistema
+permite gerar relatórios periódicos e disparar alertas críticos sem
+intervenção manual.</li>
+</ul>
+<hr />
+<h2 id="subprojetos">Subprojetos</h2>
+<h3 id="feedback-app-1">1. Feedback App</h3>
+<p>O <strong>Feedback App</strong> é uma aplicação Spring Boot
+responsável pelo envio, consulta e gestão de feedbacks. Ele
+disponibiliza endpoints REST para integração e publicação de mensagens
+em tópicos Pub/Sub para feedbacks urgentes.</p>
+<p><strong>Principais Funcionalidades:</strong></p>
+<ul>
+<li>CRUD de feedbacks via REST</li>
+<li>Publicação de mensagens em Pub/Sub para feedbacks urgentes</li>
+<li>Fornecimento de dados para relatórios semanais</li>
+<li>Controle de acesso via roles STUDENT e ADMIN</li>
+<li>Integração com Cloud SQL para persistência de dados</li>
+</ul>
+<p><strong>Fluxo de Interações:</strong></p>
+<ul>
+<li>Feedbacks marcados como urgentes são enviados para Pub/Sub
+(<code>feedback-alerts</code>) e consumidos pela função Notify
+Admin.</li>
+<li>A função Weekly Report consulta dados via REST para gerar relatórios
+semanais.</li>
+</ul>
+<figure>
+<img src="fiap-adj8-feedback-app/feedback-app.png" alt="Feedback App" />
+<figcaption aria-hidden="true">Feedback App</figcaption>
+</figure>
+<hr />
+<h3 id="notify-admin-function-1">2. Notify Admin Function</h3>
+<p>A <strong>Notify Admin Function</strong> é uma função do GCP
+responsável por enviar notificações de feedbacks urgentes aos
+administradores.</p>
+<p><strong>Principais Características:</strong></p>
+<ul>
+<li>Acionada por mensagens Pub/Sub (<code>feedback-alerts</code>)</li>
+<li>Decodifica mensagens e converte avaliações em formato adequado</li>
+<li>Envia email aos administradores com notificações imediatas</li>
+<li>Permissões via Service Accounts dedicadas para deploy e runtime</li>
+</ul>
+<p><strong>Fluxo Principal:</strong></p>
+<ol type="1">
+<li>Feedback App publica mensagem urgente no Pub/Sub</li>
+<li>Pub/Sub aciona a função Notify Admin</li>
+<li>Função envia email para administradores</li>
+</ol>
+<figure>
+<img
+src="functions/fiap-adj8-feedback-notify-admin-function/notify_admin.png"
+alt="Notify Admin Function" />
+<figcaption aria-hidden="true">Notify Admin Function</figcaption>
+</figure>
+<hr />
+<h3 id="weekly-report-function-1">3. Weekly Report Function</h3>
+<p>A <strong>Weekly Report Function</strong> gera relatórios semanais de
+feedbacks para administradores cadastrados.</p>
+<p><strong>Principais Características:</strong></p>
+<ul>
+<li>Acionada automaticamente pelo <strong>Cloud Scheduler</strong></li>
+<li>Recebe trigger via Pub/Sub
+(<code>weekly-feedback-reports</code>)</li>
+<li>Consulta feedbacks da semana via REST do Feedback App</li>
+<li>Gera relatório em formato HTML e envia por email</li>
+<li>Permissões via Service Accounts dedicadas</li>
+</ul>
+<p><strong>Fluxo Principal:</strong></p>
+<ol type="1">
+<li>Cloud Scheduler dispara evento semanal</li>
+<li>Mensagem publicada em Pub/Sub
+(<code>weekly-feedback-reports</code>)</li>
+<li>Função consome mensagem, consulta Feedback App e gera relatório</li>
+<li>Relatório enviado para administradores</li>
+</ol>
+<figure>
+<img
+src="functions/fiap-adj8-feedback-weekly-report-function/weekly_report.png"
+alt="Weekly Report Function" />
+<figcaption aria-hidden="true">Weekly Report Function</figcaption>
+</figure>
+<hr />
+<h2 id="fluxos-de-interações">Fluxos de Interações</h2>
+<ul>
+<li><p><strong>Feedback Urgente:</strong><br />
+Feedback App → Pub/Sub (<code>feedback-alerts</code>) → Notify Admin
+Function</p></li>
+<li><p><strong>Relatório Semanal:</strong><br />
+Cloud Scheduler → Pub/Sub (<code>weekly-feedback-reports</code>) →
+Weekly Report Function → Feedback App (REST)</p></li>
+</ul>
+<hr />
+<h2 id="segurança">Segurança</h2>
+<ul>
+<li><p>Autenticação via <strong>HTTP Basic</strong></p></li>
+<li><p>Roles:</p>
+<ul>
+<li>STUDENT: acesso a /feedback/**</li>
+<li>ADMIN: acesso a /admin/** e monitoramento geral</li>
+</ul></li>
+<li><p>Usuários pré-configurados para teste em memória</p></li>
+<li><p>Senhas codificadas via BCrypt</p></li>
+<li><p>Controle de permissões de funções e deploy via Service Accounts
+GCP</p></li>
+</ul>
+<hr />
+<h2 id="estrutura-geral-de-projetos">Estrutura Geral de Projetos</h2>
+<p>fiap-adj8-feedback-platform/ ├─ pom.xml # POM pai (Maven
+multi-módulo) ├─ fiap-adj8-feedback-app/ # Aplicação principal Spring
+Boot ├─ functions/ │ ├─ fiap-adj8-feedback-notify-admin-function/ │ └─
+fiap-adj8-feedback-weekly-report-function/</p>
+<p>yaml Copy code</p>
+<hr />
+<h2 id="objetivos-arquiteturais">Objetivos Arquiteturais</h2>
+<ul>
+<li>Modularidade e separação de responsabilidades</li>
+<li>Escalabilidade horizontal dos serviços</li>
+<li>Automação de notificações e relatórios</li>
+<li>Governança centralizada via projeto pai Maven</li>
+<li>Facilidade para evolução e manutenção futura</li>
+</ul>
+<hr />
+<h1 id="service-accounts-provisionamento-e-deploy-no-gcp">Service
+Accounts, Provisionamento e Deploy no GCP</h1>
+<h2 id="tabela-de-service-accounts-e-papéis">Tabela de Service Accounts
+e papéis</h2>
+<table>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 35%" />
+<col style="width: 33%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>SA</th>
+<th>Função / Propósito</th>
+<th>Roles Principais</th>
+<th>Observações</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sa-infra</code></td>
+<td>Provisionamento de infraestrutura (Cloud SQL, App Engine, Artifact
+Registry, Compute, etc.)</td>
+<td>cloudsql.admin, artifactregistry.admin, pubsub.admin,
+cloudscheduler.admin, iam.serviceAccountUser,
+resourcemanager.projectIamAdmin, compute.networkAdmin,
+iam.securityAdmin, editor</td>
+<td>Usada para criar recursos e configurar permissões de outros
+SAs.</td>
+</tr>
+<tr class="even">
+<td><code>sa-deploy-feedback-app</code></td>
+<td>Deploy da aplicação Feedback App</td>
+<td>appengine.deployer, artifactregistry.reader, appengine.serviceAdmin,
+storage.admin, logging.viewer/logWriter,
+serviceusage.serviceUsageViewer, cloudbuild.builds.editor,
+iam.serviceAccountTokenCreator, cloudsql.client,
+secretmanager.secretAccessor</td>
+<td>Necessário para build e push de Docker,<br>deploy no App Engine e
+acesso a segredos.</td>
+</tr>
+<tr class="odd">
+<td><code>sa-deploy-notify-admin</code></td>
+<td>Deploy da função Cloud Function <code>notify-admin</code></td>
+<td>cloudfunctions.developer, pubsub.admin, logging.viewer,
+storage.admin</td>
+<td>Deploy da função que envia alertas por e-mail;<br>precisa
+criar/atualizar tópicos Pub/Sub.</td>
+</tr>
+<tr class="even">
+<td><code>sa-deploy-weekly-report</code></td>
+<td>Deploy da função Cloud Function <code>weekly-report</code></td>
+<td>cloudfunctions.developer, pubsub.admin, cloudscheduler.admin,
+logging.viewer, storage.admin</td>
+<td>Deploy da função de geração de relatórios semanais;<br>precisa criar
+tópicos Pub/Sub e jobs do Scheduler.</td>
+</tr>
+<tr class="odd">
+<td><code>sa-runtime-feedback-app</code></td>
+<td>Runtime Feedback App</td>
+<td>cloudsql.client, pubsub.publisher, logging.logWriter</td>
+<td>Executa a aplicação em produção;<br>publica mensagens em tópicos
+Pub/Sub e conecta ao Cloud SQL.</td>
+</tr>
+<tr class="even">
+<td><code>sa-runtime-notify-admin</code></td>
+<td>Runtime Notify Admin</td>
+<td>pubsub.subscriber, logging.logWriter</td>
+<td>Função recebe mensagens de alertas e envia e-mails;<br>consome
+tópicos Pub/Sub.</td>
+</tr>
+<tr class="odd">
+<td><code>sa-runtime-weekly-report</code></td>
+<td>Runtime Weekly Report</td>
+<td>pubsub.publisher, logging.logWriter</td>
+<td>Função publica mensagens de relatórios semanais;<br>consome Cloud
+Scheduler e envia logs.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="sessão-de-provisionamento-e-interação-com-gcp">Sessão de
+Provisionamento e Interação com GCP</h2>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 20%" />
+<col style="width: 36%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Etapa</th>
+<th>Propósito</th>
+<th>Ferramenta / Comando</th>
+<th>Motivação / Visão</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Autenticação com SA</strong></td>
+<td>Garantir que scripts e deploys usem credenciais corretas</td>
+<td><code>gcloud auth activate-service-account --key-file=KEY.json</code></td>
+<td>Evita usar credenciais de usuário e garante automação segura.</td>
+</tr>
+<tr class="even">
+<td><strong>Habilitar APIs necessárias</strong></td>
+<td>Disponibilizar serviços GCP para o projeto</td>
+<td><code>gcloud services enable appengine.googleapis.com ...</code></td>
+<td>Sem APIs habilitadas, recursos como Cloud SQL, Cloud Functions e
+Artifact Registry não funcionam.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criar Cloud SQL</strong></td>
+<td>Banco de dados PostgreSQL</td>
+<td><code>gcloud sql instances create ...</code></td>
+<td>Armazenamento persistente de dados do Feedback App.</td>
+</tr>
+<tr class="even">
+<td><strong>Criar Artifact Registry</strong></td>
+<td>Repositório de imagens Docker</td>
+<td><code>gcloud artifacts repositories create ...</code></td>
+<td>Necessário para push/pull de imagens Docker usadas pelo App
+Engine.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criar App Engine</strong></td>
+<td>Hospedar a aplicação</td>
+<td><code>gcloud app create --region ...</code></td>
+<td>Ambiente gerenciado para executar a aplicação e gerenciar
+escalabilidade automaticamente.</td>
+</tr>
+<tr class="even">
+<td><strong>Build &amp; Push Docker</strong></td>
+<td>Preparar imagem da aplicação</td>
+<td><code>docker build</code>, <code>docker tag</code>,
+<code>docker push</code></td>
+<td>Centraliza a aplicação em um container versionado para deploy no
+GCP.</td>
+</tr>
+<tr class="odd">
+<td><strong>Deploy App Engine</strong></td>
+<td>Colocar a aplicação em produção</td>
+<td><code>gcloud app deploy</code></td>
+<td>Publicação final da aplicação com variáveis de ambiente
+configuradas.</td>
+</tr>
+<tr class="even">
+<td><strong>Criar Tópicos Pub/Sub</strong></td>
+<td>Comunicação assíncrona</td>
+<td><code>gcloud pubsub topics create</code></td>
+<td>Permite desacoplar funções (Notify Admin, Weekly Report) do app
+principal.</td>
+</tr>
+<tr class="odd">
+<td><strong>Deploy Cloud Functions</strong></td>
+<td>Funções serverless</td>
+<td><code>gcloud functions deploy</code></td>
+<td>Automação de alertas e relatórios; funções podem escalar
+automaticamente.</td>
+</tr>
+<tr class="even">
+<td><strong>Criar Cloud Scheduler Jobs</strong></td>
+<td>Agendamento de tarefas</td>
+<td><code>gcloud scheduler jobs create pubsub</code></td>
+<td>Garante execução semanal da função de relatórios.</td>
+</tr>
+<tr class="odd">
+<td><strong>EnvVars / .env</strong></td>
+<td>Configuração central</td>
+<td><code>envsubst</code> / <code>env.yaml</code></td>
+<td>Mantém segredos e URLs de serviços separados do código-fonte.</td>
+</tr>
+<tr class="even">
+<td><strong>Validação final</strong></td>
+<td>Teste do deploy</td>
+<td><code>gcloud pubsub topics publish</code>,
+<code>gcloud functions logs read</code></td>
+<td>Confirma que a comunicação entre serviços e funções está
+funcionando.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="motivo-geral-da-arquitetura-e-automação">Motivo geral da
+arquitetura e automação</h2>
+<ol type="1">
+<li><strong>Segurança e segregação de responsabilidades:</strong> cada
+SA tem permissões mínimas necessárias (princípio do least
+privilege).</li>
+<li><strong>Automação e reprodutibilidade:</strong> scripts permitem
+provisionar infra, criar roles, SA, deploys e funções de forma
+repetível.</li>
+<li><strong>Desacoplamento e escalabilidade:</strong> Pub/Sub + Cloud
+Functions + Scheduler permite que cada módulo (alertas, relatórios, app
+principal) funcione de forma independente.</li>
+<li><strong>Observabilidade:</strong> roles de logging e roles de
+execução permitem monitorar ações de cada SA.</li>
+</ol>
+<hr />
+<h2 id="observação">Observação</h2>
+<p>Os detalhes de cada comando, criação de SAs, provisionamento de infra
+e deploy estão nos arquivos:</p>
+<ul>
+<li><code>manage-sa.sh</code> (root)</li>
+<li><code>infra.sh</code> (root)</li>
+<li><code>deploy.sh</code> em cada projeto correspondente</li>
+</ul>
+<h3
+id="para-detalhes-mais-técnicos-visualize-o-readme.md-de-cada-projeto-partindo-de-readme.md">PARA
+DETALHES MAIS TÉCNICOS, visualize o README.md de cada projeto, partindo
+de: <a href="README.md">README.md</a></h3>
+<h2 id="clonagem-do-repositório-e-atualização-com-submodules">Clonagem
+do Repositório e Atualização com Submodules</h2>
+<p>Para clonar o projeto <code>fiap-adj8-feedback-platform</code>, você
+pode usar <strong>SSH</strong> ou <strong>HTTPS</strong>, dependendo de
+como suas chaves/credenciais estão configuradas:</p>
+<h3 id="clonando-via-ssh">Clonando via SSH</h3>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="at">--recurse-submodules</span> git@github.com:gabriel-dears/fiap-adj8-feedback-platform.git</span></code></pre></div>
+<h3 id="clonando-via-https">Clonando via HTTPS</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="at">--recurse-submodules</span> https://github.com/gabriel-dears/fiap-adj8-feedback-platform.git</span></code></pre></div>
+<p><strong>⚠️ O parâmetro –recurse-submodules garante que todos os
+submodules do projeto também sejam clonados
+automaticamente.</strong></p>
+<p>Claro! Aqui está o conteúdo formatado em Markdown:</p>
+<h2 id="atualizando-o-repositório-com-submodules">Atualizando o
+Repositório com Submodules</h2>
+<p>Depois de já ter o repositório clonado, para atualizar o código
+principal e todos os submodules, use:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull <span class="at">--recurse-submodules</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> submodule update <span class="at">--remote</span></span></code></pre></div>
+<ul>
+<li><p><strong>git pull –recurse-submodules:</strong> Atualiza o branch
+principal e verifica se os submodules têm commits novos.</p></li>
+<li><p><strong>git submodule update –remote:</strong> Sincroniza os
+submodules com os commits mais recentes dos repositórios
+remotos.</p></li>
+</ul>
+</body>
+</html>
