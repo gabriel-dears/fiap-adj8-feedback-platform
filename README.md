@@ -180,7 +180,7 @@ Cada módulo pode ser deployado individualmente utilizando seus próprios script
 
 **Mas acesse o README de cada sub projeto para entender as configurações antes de executar o script de deploy**
 
-- Por exemplo (partindo do diretório raiz que encapsula todos):
+- Exemplo partindo do diretório raiz que engloba os projetos específicos:
 ```bash
 cd fiap-adj8-feedback-app
 ./deploy.sh
