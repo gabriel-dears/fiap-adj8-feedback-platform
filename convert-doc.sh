@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+
+# Arquivos de entrada
+COVER="COVER.md"
+DOC="DOCUMENTATION.md"
+
+# Arquivos de saída
+HTML_OUTPUT="DOCUMENTATION-with-cover.html"
+PDF_OUTPUT="DOCUMENTATION-with-cover.pdf"
+
+echo "🔹 Convertendo Markdown para HTML..."
+pandoc "$COVER" "$DOC" -o "$HTML_OUTPUT" --standalone
+
+echo "🔹 Convertendo HTML para PDF..."
+wkhtmltopdf --enable-local-file-access "$HTML_OUTPUT" "$PDF_OUTPUT"
+
+echo "✅ Conversão concluída!"
+echo "HTML: $HTML_OUTPUT"
+echo "PDF: $PDF_OUTPUT"

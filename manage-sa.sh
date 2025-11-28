@@ -202,7 +202,10 @@ gcloud iam service-accounts add-iam-policy-binding "$COMPUTE_SA" \
   --role="roles/iam.serviceAccountUser" \
   --quiet
 
-
+gcloud projects add-iam-policy-binding fiap-adj8-feedback-platform \
+  --member="serviceAccount:sa-deploy-feedback-app@fiap-adj8-feedback-platform.iam.gserviceaccount.com" \
+  --role="roles/pubsub.publisher" \
+  --condition=None
 
 echo "✅ Todas as Service Accounts e suas keys foram criadas com sucesso!"
 echo "📁 Keys armazenadas em: $KEYS_DIR"
