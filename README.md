@@ -55,13 +55,16 @@ mvn clean install
 
 #### Endpoints principais
 
-| Endpoint                     | Descrição                           |
-| ---------------------------- | ----------------------------------- |
-| POST /feedback               | Cria feedback (somente STUDENT)     |
-| GET /feedback                | Lista todos feedbacks com paginação |
-| GET /feedback/{id}           | Consulta feedback por ID            |
-| GET /feedback/most-rated     | Retorna feedbacks mais avaliados    |
-| GET /feedback/highest-ranked | Retorna feedbacks com maior nota    |
+| Endpoint                     | Descrição                                   |
+| ---------------------------- | ------------------------------------------- |
+| POST /feedback               | Cria feedback (somente STUDENT)             |
+| GET /feedback                | Lista todos feedbacks com paginação         |
+| GET /feedback/{id}           | Consulta feedback por ID                    |
+| PUT /feedback/{id}           | Atualiza um feedback                        |
+| DELETE /feedback/{id}        | Remove um feedback                          |
+| GET /feedback/most-rated     | Retorna feedbacks mais avaliados            |
+| GET /feedback/highest-ranked | Retorna feedbacks com maior nota            |
+| GET /user/admin/email        | Retorna lista de emails de administradores  |
 
 ---
 

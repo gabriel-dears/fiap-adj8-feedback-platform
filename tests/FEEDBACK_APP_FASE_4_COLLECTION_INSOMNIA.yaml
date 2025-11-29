@@ -1,0 +1,717 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: FIAP - ADJ8 - FASE 4 - COLLECTION
+meta:
+  id: wrk_00c0d5c38e1c4b51a64665a05ef0b6e3
+  created: 1761837339056
+  modified: 1761943725346
+  description: ""
+collection:
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback
+    name: FIND ALL FEEDBACKS - ADMIN
+    meta:
+      id: req_86bb4b4211024caab76ab77d1d63251e
+      created: 1761837348408
+      modified: 1764017380532
+      isPrivate: false
+      description: ""
+      sortKey: -1761837348408
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.2
+    authentication:
+      type: basic
+      useISO88591: false
+      username: admin@email.com
+      password: admin
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback
+    name: FIND ALL FEEDBACKS - STUDENT
+    meta:
+      id: req_f4ac460d77a84e88bf4a6dc9a4eaadaa
+      created: 1761837396218
+      modified: 1764358749348
+      isPrivate: false
+      description: ""
+      sortKey: -1761837396218
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.2
+    authentication:
+      type: basic
+      useISO88591: false
+      username: student3@email.com
+      password: student3
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback
+    name: SHOULD FAIL - CREATE FEEDBACK AS ADMIN
+    meta:
+      id: req_b9633015130c4693be1d667ec324af4b
+      created: 1761837663435
+      modified: 1764017309183
+      isPrivate: false
+      description: ""
+      sortKey: -1761837663435
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "lessonId": "c6b3a2b1-1f3d-4a8e-b5e7-7fbe7f2b8121",
+          "comment": "Great explanation of topics!",
+          "rating": "FIVE",
+          "urgent": false,
+          "date": "2025-10-30T14:08:24"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.2
+    authentication:
+      type: basic
+      useISO88591: false
+      username: admin@email.com
+      password: admin
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback
+    name: CREATE FEEDBACK AS STUDENT - URGENT FIELD AS TRUE
+    meta:
+      id: req_dc0d51602f954918bea36d4888e3ca10
+      created: 1761837889079
+      modified: 1764338326497
+      isPrivate: false
+      description: ""
+      sortKey: -1761837529826.5
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "lessonId": "f5555555-5555-5555-5555-555555555555",
+          "comment": "Great explanation of topics!",
+          "rating": "FIVE",
+          "urgent": true
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.2
+    authentication:
+      type: basic
+      useISO88591: false
+      username: student3@email.com
+      password: student3
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback
+    name: SHOULD FAIL - CREATE FEEDBACK AS STUDENT - INVALID LESSON ID
+    meta:
+      id: req_f0e2045b42d3414f852db4667b79d1ac
+      created: 1761838022978
+      modified: 1764017333077
+      isPrivate: false
+      description: ""
+      sortKey: -1761837596630.75
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "lessonId": "c6b3a2b1-1f3d-4a8e-b5e7-7fbe7f2b8AAA",
+          "comment": "Great explanation of topics!",
+          "rating": "FIVE",
+          "urgent": false,
+          "date": "2025-10-30T14:08:24"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.2
+    authentication:
+      type: basic
+      useISO88591: false
+      username: student@email.com
+      password: student
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback
+    name: SHOULD FAIL - CREATE FEEDBACK AS STUDENT - INVALID RATING
+    meta:
+      id: req_48416e4cac1f4458b836a4417b779c68
+      created: 1761838248881
+      modified: 1764017342366
+      isPrivate: false
+      description: ""
+      sortKey: -1761837563228.625
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "lessonId": "c6b3a2b1-1f3d-4a8e-b5e7-7fbe7f2b8121",
+          "comment": "Great explanation of topics!",
+          "rating": "5",
+          "urgent": false,
+          "date": "2025-10-30T14:08:24"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.2
+    authentication:
+      type: basic
+      useISO88591: false
+      username: student@email.com
+      password: student
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback
+    name: CREATE FEEDBACK AS STUDENT - MISSING URGENT FIELD
+    meta:
+      id: req_39053a69611f4b3eb18f78b538a74a46
+      created: 1761838648039
+      modified: 1764017469048
+      isPrivate: false
+      description: ""
+      sortKey: -1761837463022.25
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "lessonId": "e8d1f5c4-7122-4d1b-8e5c-0a9b1b9e3a99",
+          "comment": "Great explanation of topics!",
+          "rating": "FIVE"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.2
+    authentication:
+      type: basic
+      useISO88591: false
+      username: student@email.com
+      password: student
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback
+    name: CREATE FEEDBACK AS STUDENT - MISSING COMMENT FIELD
+    meta:
+      id: req_1ed1cef98e424c5c85519129df8f2bdf
+      created: 1761838671399
+      modified: 1764030545244
+      isPrivate: false
+      description: ""
+      sortKey: -1761837429620.125
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "lessonId": "a2d3b4c5-6e7f-809a-b1c2-d3e4f5a6b7c8",
+          "rating": "FIVE",
+          "urgent": false
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.2
+    authentication:
+      type: basic
+      useISO88591: false
+      username: student@email.com
+      password: student
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback
+    name: CREATE FEEDBACK AS STUDENT - URGENT FIELD AS FALSE
+    meta:
+      id: req_6685e3672d554fabb689ec5baab7b0b0
+      created: 1761838901372
+      modified: 1764017460055
+      isPrivate: false
+      description: ""
+      sortKey: -1761837496424.375
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "lessonId": "1fce23b2-92a5-45f6-8e4a-22a1d91c34d9",
+          "comment": "Great explanation of topics!",
+          "rating": "FIVE",
+          "urgent": false
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.2
+    authentication:
+      type: basic
+      useISO88591: false
+      username: student@email.com
+      password: student
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback/a888f1ea-be5b-4d82-8497-bc394ef8ce76
+    name: FIND FEEDBACK BY ID - STUDENT
+    meta:
+      id: req_2400f53669c043379003b877b34a818d
+      created: 1761841310004
+      modified: 1764359177035
+      isPrivate: false
+      description: ""
+      sortKey: -1760565408991.25
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.2
+    authentication:
+      type: basic
+      useISO88591: false
+      username: student3@email.com
+      password: student3
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback/eeee5555-5555-5555-5555-eeeeeeeeeeee
+    name: FIND FEEDBACK BY ID - ADMIN
+    meta:
+      id: req_6ad35eaad97c45b1b762421908b18aaf
+      created: 1761841350246
+      modified: 1764017401821
+      isPrivate: false
+      description: ""
+      sortKey: -1759293469574.5
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.2
+    authentication:
+      type: basic
+      useISO88591: false
+      username: admin@email.com
+      password: admin
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/user/admin/email
+    name: FIND ALL ADMIN EMAILS
+    meta:
+      id: req_371f455a66f04863b5b35d6e56a66d91
+      created: 1762723110985
+      modified: 1764017408858
+      isPrivate: false
+      description: ""
+      sortKey: -1759293469474.5
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/12.0.0
+    authentication:
+      type: basic
+      useISO88591: false
+      username: admin@email.com
+      password: admin
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback/most-rated
+    name: FIND MOST RATED FEEDBACKS
+    meta:
+      id: req_7eeab742c10f4067bdbd657f64ec5c6a
+      created: 1762781251420
+      modified: 1764017415917
+      isPrivate: false
+      description: ""
+      sortKey: -1758021530107.75
+    method: GET
+    parameters:
+      - name: startDate
+        value: 2025-11-01
+        description: ""
+        disabled: false
+      - name: endDate
+        value: 2025-11-17
+        description: ""
+        disabled: false
+    headers:
+      - name: User-Agent
+        value: insomnia/12.0.0
+    authentication:
+      type: basic
+      useISO88591: false
+      username: admin@email.com
+      password: admin
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback/highest-ranked
+    name: FIND HIGHEST RANKED FEEDBACKS
+    meta:
+      id: req_adf8de7277d14ad5b7ddb1e46ce45579
+      created: 1762782321079
+      modified: 1764017421501
+      isPrivate: false
+      description: ""
+      sortKey: -1757385560424.375
+    method: GET
+    parameters:
+      - name: startDate
+        value: 2025-11-01
+        description: ""
+        disabled: false
+      - name: endDate
+        value: 2025-11-17
+        description: ""
+        disabled: false
+    headers:
+      - name: User-Agent
+        value: insomnia/12.0.0
+    authentication:
+      type: basic
+      useISO88591: false
+      username: admin@email.com
+      password: admin
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback/0d1be0c6-d623-4066-9cb1-41081fa5d082
+    name: DELETE FEEDBACK - INVALID STUDENT
+    meta:
+      id: req_46d1756d64a149039a87ef6b57d8089e
+      created: 1764354936926
+      modified: 1764355608609
+      isPrivate: false
+      description: ""
+      sortKey: -1757385560324.375
+    method: DELETE
+    headers:
+      - name: User-Agent
+        value: insomnia/12.1.0
+        description: ""
+        disabled: false
+    authentication:
+      type: basic
+      useISO88591: false
+      username: student2@email.com
+      password: student2
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback/0d1be0c6-d623-4066-9cb1-41081fa5d082
+    name: DELETE FEEDBACK - ADMIN
+    meta:
+      id: req_b3acc9bd362c4fc39bc13847b878a782
+      created: 1764355584517
+      modified: 1764355617172
+      isPrivate: false
+      description: ""
+      sortKey: -1757067575532.6875
+    method: DELETE
+    headers:
+      - name: User-Agent
+        value: insomnia/12.1.0
+        description: ""
+        disabled: false
+    authentication:
+      type: basic
+      useISO88591: false
+      username: admin@email.com
+      password: admin
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback/a888f1ea-be5b-4d82-8497-bc394ef8ce76
+    name: DELETE FEEDBACK - STUDENT
+    meta:
+      id: req_af10463d34a54a84b9200a4318d21467
+      created: 1764355599926
+      modified: 1764377743379
+      isPrivate: false
+      description: ""
+      sortKey: -1756908583136.8438
+    method: DELETE
+    headers:
+      - name: User-Agent
+        value: insomnia/12.1.0
+        description: ""
+        disabled: false
+    authentication:
+      type: basic
+      useISO88591: false
+      username: student3@email.com
+      password: student3
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback/a888f1ea-be5b-4d82-8497-bc394ef8ce76
+    name: UPDATE FEEDBACK
+    meta:
+      id: req_928d1578f649430cb50260703736ddf6
+      created: 1764358505218
+      modified: 1764359150334
+      isPrivate: false
+      description: ""
+      sortKey: -1756908583036.8438
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "comment": "Bad explanation of topics!",
+          "rating": "ONE",
+          "urgent": true
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.1.0
+        description: ""
+        disabled: false
+    authentication:
+      type: basic
+      useISO88591: false
+      username: student3@email.com
+      password: student3
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback/a888f1ea-be5b-4d82-8497-bc394ef8ce76
+    name: UPDATE FEEDBACK - ADMIN
+    meta:
+      id: req_77232e44e08c4f85991cfb045d88923d
+      created: 1764371451332
+      modified: 1764371524206
+      isPrivate: false
+      description: ""
+      sortKey: -1756829086888.9219
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "comment": "Bad explanation of topics!",
+          "rating": "ONE",
+          "urgent": true
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.1.0
+        description: ""
+        disabled: false
+    authentication:
+      type: basic
+      useISO88591: false
+      username: admin@email.com
+      password: admin
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com/feedback/a888f1ea-be5b-4d82-8497-bc394ef8ce76
+    name: UPDATE FEEDBACK - INVALID STUDENT
+    meta:
+      id: req_2aa976849adf4086a8b5db7e99d0b55e
+      created: 1764371468248
+      modified: 1764371514259
+      isPrivate: false
+      description: ""
+      sortKey: -1756789338814.961
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "comment": "Bad explanation of topics!",
+          "rating": "ONE",
+          "urgent": true
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.1.0
+        description: ""
+        disabled: false
+    authentication:
+      type: basic
+      useISO88591: false
+      username: student2@email.com
+      password: student2
+      disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_1c3a8c309214e65e1b17dbf2a32e9ec9b7c9a4a4
+    created: 1761837339058
+    modified: 1764358573434
+  cookies:
+    - id: 90c1021c-c826-4eac-990c-ca632a154198
+      key: JSESSIONID
+      value: C61F905DA41BEC8934F5E236BA50A98C
+      domain: localhost
+      path: /
+      secure: false
+      httpOnly: true
+      hostOnly: true
+    - id: 6d56e073-3eac-4ec2-82c1-4fee4c50f24a
+      key: JSESSIONID
+      value: 9C42300742F68810F4A8064825C8927A
+      domain: fiap-feedback-app-dot-fiap-adj8-feedback-platform.uc.r.appspot.com
+      path: /
+      secure: false
+      httpOnly: true
+      hostOnly: true
+environments:
+  name: Base Environment
+  meta:
+    id: env_1c3a8c309214e65e1b17dbf2a32e9ec9b7c9a4a4
+    created: 1761837339057
+    modified: 1761837339057
+    isPrivate: false
