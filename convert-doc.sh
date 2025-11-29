@@ -13,7 +13,13 @@ echo "🔹 Convertendo Markdown para HTML..."
 pandoc "$COVER" "$DOC" -o "$HTML_OUTPUT" --standalone
 
 echo "🔹 Convertendo HTML para PDF..."
-wkhtmltopdf --enable-local-file-access "$HTML_OUTPUT" "$PDF_OUTPUT"
+wkhtmltopdf \
+  --enable-local-file-access \
+  --margin-top 10mm \
+  --margin-bottom 10mm \
+  --margin-left 5mm \
+  --margin-right 5mm \
+  "$HTML_OUTPUT" "$PDF_OUTPUT"
 
 echo "✅ Conversão concluída!"
 echo "HTML: $HTML_OUTPUT"

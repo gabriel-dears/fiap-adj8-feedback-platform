@@ -1,5 +1,7 @@
 ## Visão Geral do Projeto
 
+**Observação:** O vídeo de apresentação está no final do arquivo
+
 O **FIAP ADJ8 Feedback Platform** é uma plataforma modular e escalável para coleta, gestão e monitoramento de feedbacks de alunos. Ela engloba três subprojetos principais, cada um com responsabilidades claras, permitindo automação de notificações e geração de relatórios semanais.
 
 O projeto segue **arquitetura hexagonal**, garantindo separação de responsabilidades entre domínio, aplicação e infraestrutura, facilitando manutenção, testes e evolução futura.
@@ -163,15 +165,14 @@ A **Weekly Report Function** gera relatórios semanais de feedbacks para adminis
 
 ## Estrutura Geral de Projetos
 
+```text
 fiap-adj8-feedback-platform/
 ├─ pom.xml # POM pai (Maven multi-módulo)
 ├─ fiap-adj8-feedback-app/ # Aplicação principal Spring Boot
 ├─ functions/
 │ ├─ fiap-adj8-feedback-notify-admin-function/
 │ └─ fiap-adj8-feedback-weekly-report-function/
-
-yaml
-Copy code
+```
 
 ---
 
@@ -187,39 +188,154 @@ Copy code
 
 # Service Accounts, Provisionamento e Deploy no GCP
 
-## Tabela de Service Accounts e papéis
+## Lista de Service Accounts e Papéis
 
-| SA | Função / Propósito | Roles Principais | Observações |
-|----|------------------|-----------------|------------|
-| `sa-infra` | Provisionamento de infraestrutura (Cloud SQL, App Engine, Artifact Registry, Compute, etc.) | cloudsql.admin, artifactregistry.admin, pubsub.admin, cloudscheduler.admin, iam.serviceAccountUser, resourcemanager.projectIamAdmin, compute.networkAdmin, iam.securityAdmin, editor | Usada para criar recursos e configurar permissões de outros SAs. |
-| `sa-deploy-feedback-app` | Deploy da aplicação Feedback App | appengine.deployer, artifactregistry.reader, appengine.serviceAdmin, storage.admin, logging.viewer/logWriter, serviceusage.serviceUsageViewer, cloudbuild.builds.editor, iam.serviceAccountTokenCreator, cloudsql.client, secretmanager.secretAccessor | Necessário para build e push de Docker,<br>deploy no App Engine e acesso a segredos. |
-| `sa-deploy-notify-admin` | Deploy da função Cloud Function `notify-admin` | cloudfunctions.developer, pubsub.admin, logging.viewer, storage.admin | Deploy da função que envia alertas por e-mail;<br>precisa criar/atualizar tópicos Pub/Sub. |
-| `sa-deploy-weekly-report` | Deploy da função Cloud Function `weekly-report` | cloudfunctions.developer, pubsub.admin, cloudscheduler.admin, logging.viewer, storage.admin | Deploy da função de geração de relatórios semanais;<br>precisa criar tópicos Pub/Sub e jobs do Scheduler. |
-| `sa-runtime-feedback-app` | Runtime Feedback App | cloudsql.client, pubsub.publisher, logging.logWriter | Executa a aplicação em produção;<br>publica mensagens em tópicos Pub/Sub e conecta ao Cloud SQL. |
-| `sa-runtime-notify-admin` | Runtime Notify Admin | pubsub.subscriber, logging.logWriter | Função recebe mensagens de alertas e envia e-mails;<br>consome tópicos Pub/Sub. |
-| `sa-runtime-weekly-report` | Runtime Weekly Report | pubsub.publisher, logging.logWriter | Função publica mensagens de relatórios semanais;<br>consome Cloud Scheduler e envia logs. |
+- **sa-infra**
+    - Função / Propósito: Provisionamento de infraestrutura (Cloud SQL, App Engine, Artifact Registry, Compute, etc.)
+    - Roles principais:
+        - cloudsql.admin
+        - artifactregistry.admin
+        - pubsub.admin
+        - cloudscheduler.admin
+        - iam.serviceAccountUser
+        - resourcemanager.projectIamAdmin
+        - compute.networkAdmin
+        - iam.securityAdmin
+        - editor
+    - Observações:
+        - Usada para criar recursos e configurar permissões de outros SAs.
 
----
+- **sa-deploy-feedback-app**
+    - Função / Propósito: Deploy da aplicação Feedback App
+    - Roles principais:
+        - appengine.deployer
+        - artifactregistry.reader
+        - appengine.serviceAdmin
+        - storage.admin
+        - logging.viewer / logging.logWriter
+        - serviceusage.serviceUsageViewer
+        - cloudbuild.builds.editor
+        - iam.serviceAccountTokenCreator
+        - cloudsql.client
+        - secretmanager.secretAccessor
+    - Observações:
+        - Necessário para build/push de Docker, deploy no App Engine e acesso a segredos.
+
+- **sa-deploy-notify-admin**
+    - Função / Propósito: Deploy da Cloud Function `notify-admin`
+    - Roles principais:
+        - cloudfunctions.developer
+        - pubsub.admin
+        - logging.viewer
+        - storage.admin
+    - Observações:
+        - Deploy da função que envia alertas por e-mail.
+        - Precisa criar/atualizar tópicos Pub/Sub.
+
+- **sa-deploy-weekly-report**
+    - Função / Propósito: Deploy da Cloud Function `weekly-report`
+    - Roles principais:
+        - cloudfunctions.developer
+        - pubsub.admin
+        - cloudscheduler.admin
+        - logging.viewer
+        - storage.admin
+    - Observações:
+        - Deploy da função de geração de relatórios semanais.
+        - Precisa criar tópicos Pub/Sub e jobs do Cloud Scheduler.
+
+- **sa-runtime-feedback-app**
+    - Função / Propósito: Execução da aplicação Feedback App
+    - Roles principais:
+        - cloudsql.client
+        - pubsub.publisher
+        - logging.logWriter
+    - Observações:
+        - Publica mensagens em tópicos Pub/Sub.
+        - Conecta ao Cloud SQL.
+
+- **sa-runtime-notify-admin**
+    - Função / Propósito: Execução da função Notify Admin
+    - Roles principais:
+        - pubsub.subscriber
+        - logging.logWriter
+    - Observações:
+        - Consome tópicos com alertas.
+        - Envia e-mails com base nas mensagens.
+
+- **sa-runtime-weekly-report**
+    - Função / Propósito: Execução da função Weekly Report
+    - Roles principais:
+        - pubsub.publisher
+        - logging.logWriter
+    - Observações:
+        - Publica mensagens de relatórios semanais.
+        - Recebe eventos do Cloud Scheduler.
+
 
 
 ## Sessão de Provisionamento e Interação com GCP
 
-| Etapa | Propósito | Ferramenta / Comando | Motivação / Visão |
-|-------|-----------|--------------------|-----------------|
-| **Autenticação com SA** | Garantir que scripts e deploys usem credenciais corretas | `gcloud auth activate-service-account --key-file=KEY.json` | Evita usar credenciais de usuário e garante automação segura. |
-| **Habilitar APIs necessárias** | Disponibilizar serviços GCP para o projeto | `gcloud services enable appengine.googleapis.com ...` | Sem APIs habilitadas, recursos como Cloud SQL, Cloud Functions e Artifact Registry não funcionam. |
-| **Criar Cloud SQL** | Banco de dados PostgreSQL | `gcloud sql instances create ...` | Armazenamento persistente de dados do Feedback App. |
-| **Criar Artifact Registry** | Repositório de imagens Docker | `gcloud artifacts repositories create ...` | Necessário para push/pull de imagens Docker usadas pelo App Engine. |
-| **Criar App Engine** | Hospedar a aplicação | `gcloud app create --region ...` | Ambiente gerenciado para executar a aplicação e gerenciar escalabilidade automaticamente. |
-| **Build & Push Docker** | Preparar imagem da aplicação | `docker build`, `docker tag`, `docker push` | Centraliza a aplicação em um container versionado para deploy no GCP. |
-| **Deploy App Engine** | Colocar a aplicação em produção | `gcloud app deploy` | Publicação final da aplicação com variáveis de ambiente configuradas. |
-| **Criar Tópicos Pub/Sub** | Comunicação assíncrona | `gcloud pubsub topics create` | Permite desacoplar funções (Notify Admin, Weekly Report) do app principal. |
-| **Deploy Cloud Functions** | Funções serverless | `gcloud functions deploy` | Automação de alertas e relatórios; funções podem escalar automaticamente. |
-| **Criar Cloud Scheduler Jobs** | Agendamento de tarefas | `gcloud scheduler jobs create pubsub` | Garante execução semanal da função de relatórios. |
-| **EnvVars / .env** | Configuração central | `envsubst` / `env.yaml` | Mantém segredos e URLs de serviços separados do código-fonte. |
-| **Validação final** | Teste do deploy | `gcloud pubsub topics publish`, `gcloud functions logs read` | Confirma que a comunicação entre serviços e funções está funcionando. |
+- **Autenticação com SA**
+    - Propósito: Garantir que scripts e deploys usem credenciais corretas
+    - Ferramenta / Comando: `gcloud auth activate-service-account --key-file=KEY.json`
+    - Motivação / Visão: Evita usar credenciais de usuário e garante automação segura.
 
----
+- **Habilitar APIs necessárias**
+    - Propósito: Disponibilizar serviços GCP para o projeto
+    - Ferramenta / Comando: `gcloud services enable appengine.googleapis.com ...`
+    - Motivação / Visão: Sem APIs habilitadas, recursos como Cloud SQL, Cloud Functions e Artifact Registry não funcionam.
+
+- **Criar Cloud SQL**
+    - Propósito: Banco de dados PostgreSQL
+    - Ferramenta / Comando: `gcloud sql instances create ...`
+    - Motivação / Visão: Armazenamento persistente de dados do Feedback App.
+
+- **Criar Artifact Registry**
+    - Propósito: Repositório de imagens Docker
+    - Ferramenta / Comando: `gcloud artifacts repositories create ...`
+    - Motivação / Visão: Necessário para push/pull de imagens Docker usadas pelo App Engine.
+
+- **Criar App Engine**
+    - Propósito: Hospedar a aplicação
+    - Ferramenta / Comando: `gcloud app create --region ...`
+    - Motivação / Visão: Ambiente gerenciado para executar a aplicação e gerenciar escalabilidade automaticamente.
+
+- **Build & Push Docker**
+    - Propósito: Preparar imagem da aplicação
+    - Ferramenta / Comando: `docker build`, `docker tag`, `docker push`
+    - Motivação / Visão: Centraliza a aplicação em um container versionado para deploy no GCP.
+
+- **Deploy App Engine**
+    - Propósito: Colocar a aplicação em produção
+    - Ferramenta / Comando: `gcloud app deploy`
+    - Motivação / Visão: Publicação final da aplicação com variáveis de ambiente configuradas.
+
+- **Criar Tópicos Pub/Sub**
+    - Propósito: Comunicação assíncrona
+    - Ferramenta / Comando: `gcloud pubsub topics create`
+    - Motivação / Visão: Permite desacoplar funções (Notify Admin, Weekly Report) do app principal.
+
+- **Deploy Cloud Functions**
+    - Propósito: Funções serverless
+    - Ferramenta / Comando: `gcloud functions deploy`
+    - Motivação / Visão: Automação de alertas e relatórios; funções podem escalar automaticamente.
+
+- **Criar Cloud Scheduler Jobs**
+    - Propósito: Agendamento de tarefas
+    - Ferramenta / Comando: `gcloud scheduler jobs create pubsub`
+    - Motivação / Visão: Garante execução semanal da função de relatórios.
+
+- **EnvVars / .env**
+    - Propósito: Configuração central
+    - Ferramenta / Comando: `envsubst` / `env.yaml`
+    - Motivação / Visão: Mantém segredos e URLs de serviços separados do código-fonte.
+
+- **Validação final**
+    - Propósito: Teste do deploy
+    - Ferramenta / Comando: `gcloud pubsub topics publish`, `gcloud functions logs read`
+    - Motivação / Visão: Confirma que a comunicação entre serviços e funções está funcionando.
+
 
 ## Motivo geral da arquitetura e automação
 
@@ -272,3 +388,11 @@ git submodule update --remote
 - **git pull --recurse-submodules:** Atualiza o branch principal e verifica se os submodules têm commits novos.
 
 - **git submodule update --remote:** Sincroniza os submodules com os commits mais recentes dos repositórios remotos.
+
+## Link para o GitHub:
+
+- **[https://github.com/gabriel-dears/fiap-adj8-feedback-platform](https://github.com/gabriel-dears/fiap-adj8-feedback-platform)**
+
+## Vídeo de apresentação
+
+- **[https://drive.google.com/file/d/1IAia4uFERwWyZAtmCtmC5Ki3TJ0W3r2r/view?usp=sharing](https://drive.google.com/file/d/1IAia4uFERwWyZAtmCtmC5Ki3TJ0W3r2r/view?usp=sharing)**

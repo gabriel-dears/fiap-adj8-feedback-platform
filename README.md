@@ -66,6 +66,8 @@ mvn clean install
 | GET /feedback/highest-ranked | Retorna feedbacks com maior nota            |
 | GET /user/admin/email        | Retorna lista de emails de administradores  |
 
+#### Coleção para testes localizada em: tests/FEEDBACK_APP_FASE_4_COLLECTION_INSOMNIA.yaml
+
 ---
 
 ### 2. Notify Admin Function

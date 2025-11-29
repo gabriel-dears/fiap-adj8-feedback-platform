@@ -246,6 +246,8 @@ Desenvolvimento em Java</h2>
 
 </div>
 <h2 id="visão-geral-do-projeto">Visão Geral do Projeto</h2>
+<p><strong>Observação:</strong> O vídeo de apresentação está no final do
+arquivo</p>
 <p>O <strong>FIAP ADJ8 Feedback Platform</strong> é uma plataforma
 modular e escalável para coleta, gestão e monitoramento de feedbacks de
 alunos. Ela engloba três subprojetos principais, cada um com
@@ -455,11 +457,12 @@ GCP</p></li>
 </ul>
 <hr />
 <h2 id="estrutura-geral-de-projetos">Estrutura Geral de Projetos</h2>
-<p>fiap-adj8-feedback-platform/ ├─ pom.xml # POM pai (Maven
-multi-módulo) ├─ fiap-adj8-feedback-app/ # Aplicação principal Spring
-Boot ├─ functions/ │ ├─ fiap-adj8-feedback-notify-admin-function/ │ └─
-fiap-adj8-feedback-weekly-report-function/</p>
-<p>yaml Copy code</p>
+<pre class="text"><code>fiap-adj8-feedback-platform/
+├─ pom.xml # POM pai (Maven multi-módulo)
+├─ fiap-adj8-feedback-app/ # Aplicação principal Spring Boot
+├─ functions/
+│ ├─ fiap-adj8-feedback-notify-admin-function/
+│ └─ fiap-adj8-feedback-weekly-report-function/</code></pre>
 <hr />
 <h2 id="objetivos-arquiteturais">Objetivos Arquiteturais</h2>
 <ul>
@@ -472,189 +475,230 @@ fiap-adj8-feedback-weekly-report-function/</p>
 <hr />
 <h1 id="service-accounts-provisionamento-e-deploy-no-gcp">Service
 Accounts, Provisionamento e Deploy no GCP</h1>
-<h2 id="tabela-de-service-accounts-e-papéis">Tabela de Service Accounts
-e papéis</h2>
-<table>
-<colgroup>
-<col style="width: 7%" />
-<col style="width: 35%" />
-<col style="width: 33%" />
-<col style="width: 23%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>SA</th>
-<th>Função / Propósito</th>
-<th>Roles Principais</th>
-<th>Observações</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>sa-infra</code></td>
-<td>Provisionamento de infraestrutura (Cloud SQL, App Engine, Artifact
-Registry, Compute, etc.)</td>
-<td>cloudsql.admin, artifactregistry.admin, pubsub.admin,
-cloudscheduler.admin, iam.serviceAccountUser,
-resourcemanager.projectIamAdmin, compute.networkAdmin,
-iam.securityAdmin, editor</td>
-<td>Usada para criar recursos e configurar permissões de outros
-SAs.</td>
-</tr>
-<tr class="even">
-<td><code>sa-deploy-feedback-app</code></td>
-<td>Deploy da aplicação Feedback App</td>
-<td>appengine.deployer, artifactregistry.reader, appengine.serviceAdmin,
-storage.admin, logging.viewer/logWriter,
-serviceusage.serviceUsageViewer, cloudbuild.builds.editor,
-iam.serviceAccountTokenCreator, cloudsql.client,
-secretmanager.secretAccessor</td>
-<td>Necessário para build e push de Docker,<br>deploy no App Engine e
-acesso a segredos.</td>
-</tr>
-<tr class="odd">
-<td><code>sa-deploy-notify-admin</code></td>
-<td>Deploy da função Cloud Function <code>notify-admin</code></td>
-<td>cloudfunctions.developer, pubsub.admin, logging.viewer,
-storage.admin</td>
-<td>Deploy da função que envia alertas por e-mail;<br>precisa
-criar/atualizar tópicos Pub/Sub.</td>
-</tr>
-<tr class="even">
-<td><code>sa-deploy-weekly-report</code></td>
-<td>Deploy da função Cloud Function <code>weekly-report</code></td>
-<td>cloudfunctions.developer, pubsub.admin, cloudscheduler.admin,
-logging.viewer, storage.admin</td>
-<td>Deploy da função de geração de relatórios semanais;<br>precisa criar
-tópicos Pub/Sub e jobs do Scheduler.</td>
-</tr>
-<tr class="odd">
-<td><code>sa-runtime-feedback-app</code></td>
-<td>Runtime Feedback App</td>
-<td>cloudsql.client, pubsub.publisher, logging.logWriter</td>
-<td>Executa a aplicação em produção;<br>publica mensagens em tópicos
-Pub/Sub e conecta ao Cloud SQL.</td>
-</tr>
-<tr class="even">
-<td><code>sa-runtime-notify-admin</code></td>
-<td>Runtime Notify Admin</td>
-<td>pubsub.subscriber, logging.logWriter</td>
-<td>Função recebe mensagens de alertas e envia e-mails;<br>consome
-tópicos Pub/Sub.</td>
-</tr>
-<tr class="odd">
-<td><code>sa-runtime-weekly-report</code></td>
-<td>Runtime Weekly Report</td>
-<td>pubsub.publisher, logging.logWriter</td>
-<td>Função publica mensagens de relatórios semanais;<br>consome Cloud
-Scheduler e envia logs.</td>
-</tr>
-</tbody>
-</table>
-<hr />
+<h2 id="lista-de-service-accounts-e-papéis">Lista de Service Accounts e
+Papéis</h2>
+<ul>
+<li><strong>sa-infra</strong>
+<ul>
+<li>Função / Propósito: Provisionamento de infraestrutura (Cloud SQL,
+App Engine, Artifact Registry, Compute, etc.)</li>
+<li>Roles principais:
+<ul>
+<li>cloudsql.admin</li>
+<li>artifactregistry.admin</li>
+<li>pubsub.admin</li>
+<li>cloudscheduler.admin</li>
+<li>iam.serviceAccountUser</li>
+<li>resourcemanager.projectIamAdmin</li>
+<li>compute.networkAdmin</li>
+<li>iam.securityAdmin</li>
+<li>editor</li>
+</ul></li>
+<li>Observações:
+<ul>
+<li>Usada para criar recursos e configurar permissões de outros
+SAs.</li>
+</ul></li>
+</ul></li>
+<li><strong>sa-deploy-feedback-app</strong>
+<ul>
+<li>Função / Propósito: Deploy da aplicação Feedback App</li>
+<li>Roles principais:
+<ul>
+<li>appengine.deployer</li>
+<li>artifactregistry.reader</li>
+<li>appengine.serviceAdmin</li>
+<li>storage.admin</li>
+<li>logging.viewer / logging.logWriter</li>
+<li>serviceusage.serviceUsageViewer</li>
+<li>cloudbuild.builds.editor</li>
+<li>iam.serviceAccountTokenCreator</li>
+<li>cloudsql.client</li>
+<li>secretmanager.secretAccessor</li>
+</ul></li>
+<li>Observações:
+<ul>
+<li>Necessário para build/push de Docker, deploy no App Engine e acesso
+a segredos.</li>
+</ul></li>
+</ul></li>
+<li><strong>sa-deploy-notify-admin</strong>
+<ul>
+<li>Função / Propósito: Deploy da Cloud Function
+<code>notify-admin</code></li>
+<li>Roles principais:
+<ul>
+<li>cloudfunctions.developer</li>
+<li>pubsub.admin</li>
+<li>logging.viewer</li>
+<li>storage.admin</li>
+</ul></li>
+<li>Observações:
+<ul>
+<li>Deploy da função que envia alertas por e-mail.</li>
+<li>Precisa criar/atualizar tópicos Pub/Sub.</li>
+</ul></li>
+</ul></li>
+<li><strong>sa-deploy-weekly-report</strong>
+<ul>
+<li>Função / Propósito: Deploy da Cloud Function
+<code>weekly-report</code></li>
+<li>Roles principais:
+<ul>
+<li>cloudfunctions.developer</li>
+<li>pubsub.admin</li>
+<li>cloudscheduler.admin</li>
+<li>logging.viewer</li>
+<li>storage.admin</li>
+</ul></li>
+<li>Observações:
+<ul>
+<li>Deploy da função de geração de relatórios semanais.</li>
+<li>Precisa criar tópicos Pub/Sub e jobs do Cloud Scheduler.</li>
+</ul></li>
+</ul></li>
+<li><strong>sa-runtime-feedback-app</strong>
+<ul>
+<li>Função / Propósito: Execução da aplicação Feedback App</li>
+<li>Roles principais:
+<ul>
+<li>cloudsql.client</li>
+<li>pubsub.publisher</li>
+<li>logging.logWriter</li>
+</ul></li>
+<li>Observações:
+<ul>
+<li>Publica mensagens em tópicos Pub/Sub.</li>
+<li>Conecta ao Cloud SQL.</li>
+</ul></li>
+</ul></li>
+<li><strong>sa-runtime-notify-admin</strong>
+<ul>
+<li>Função / Propósito: Execução da função Notify Admin</li>
+<li>Roles principais:
+<ul>
+<li>pubsub.subscriber</li>
+<li>logging.logWriter</li>
+</ul></li>
+<li>Observações:
+<ul>
+<li>Consome tópicos com alertas.</li>
+<li>Envia e-mails com base nas mensagens.</li>
+</ul></li>
+</ul></li>
+<li><strong>sa-runtime-weekly-report</strong>
+<ul>
+<li>Função / Propósito: Execução da função Weekly Report</li>
+<li>Roles principais:
+<ul>
+<li>pubsub.publisher</li>
+<li>logging.logWriter</li>
+</ul></li>
+<li>Observações:
+<ul>
+<li>Publica mensagens de relatórios semanais.</li>
+<li>Recebe eventos do Cloud Scheduler.</li>
+</ul></li>
+</ul></li>
+</ul>
 <h2 id="sessão-de-provisionamento-e-interação-com-gcp">Sessão de
 Provisionamento e Interação com GCP</h2>
-<table>
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 20%" />
-<col style="width: 36%" />
-<col style="width: 30%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Etapa</th>
-<th>Propósito</th>
-<th>Ferramenta / Comando</th>
-<th>Motivação / Visão</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Autenticação com SA</strong></td>
-<td>Garantir que scripts e deploys usem credenciais corretas</td>
-<td><code>gcloud auth activate-service-account --key-file=KEY.json</code></td>
-<td>Evita usar credenciais de usuário e garante automação segura.</td>
-</tr>
-<tr class="even">
-<td><strong>Habilitar APIs necessárias</strong></td>
-<td>Disponibilizar serviços GCP para o projeto</td>
-<td><code>gcloud services enable appengine.googleapis.com ...</code></td>
-<td>Sem APIs habilitadas, recursos como Cloud SQL, Cloud Functions e
-Artifact Registry não funcionam.</td>
-</tr>
-<tr class="odd">
-<td><strong>Criar Cloud SQL</strong></td>
-<td>Banco de dados PostgreSQL</td>
-<td><code>gcloud sql instances create ...</code></td>
-<td>Armazenamento persistente de dados do Feedback App.</td>
-</tr>
-<tr class="even">
-<td><strong>Criar Artifact Registry</strong></td>
-<td>Repositório de imagens Docker</td>
-<td><code>gcloud artifacts repositories create ...</code></td>
-<td>Necessário para push/pull de imagens Docker usadas pelo App
-Engine.</td>
-</tr>
-<tr class="odd">
-<td><strong>Criar App Engine</strong></td>
-<td>Hospedar a aplicação</td>
-<td><code>gcloud app create --region ...</code></td>
-<td>Ambiente gerenciado para executar a aplicação e gerenciar
-escalabilidade automaticamente.</td>
-</tr>
-<tr class="even">
-<td><strong>Build &amp; Push Docker</strong></td>
-<td>Preparar imagem da aplicação</td>
-<td><code>docker build</code>, <code>docker tag</code>,
-<code>docker push</code></td>
-<td>Centraliza a aplicação em um container versionado para deploy no
-GCP.</td>
-</tr>
-<tr class="odd">
-<td><strong>Deploy App Engine</strong></td>
-<td>Colocar a aplicação em produção</td>
-<td><code>gcloud app deploy</code></td>
-<td>Publicação final da aplicação com variáveis de ambiente
-configuradas.</td>
-</tr>
-<tr class="even">
-<td><strong>Criar Tópicos Pub/Sub</strong></td>
-<td>Comunicação assíncrona</td>
-<td><code>gcloud pubsub topics create</code></td>
-<td>Permite desacoplar funções (Notify Admin, Weekly Report) do app
-principal.</td>
-</tr>
-<tr class="odd">
-<td><strong>Deploy Cloud Functions</strong></td>
-<td>Funções serverless</td>
-<td><code>gcloud functions deploy</code></td>
-<td>Automação de alertas e relatórios; funções podem escalar
-automaticamente.</td>
-</tr>
-<tr class="even">
-<td><strong>Criar Cloud Scheduler Jobs</strong></td>
-<td>Agendamento de tarefas</td>
-<td><code>gcloud scheduler jobs create pubsub</code></td>
-<td>Garante execução semanal da função de relatórios.</td>
-</tr>
-<tr class="odd">
-<td><strong>EnvVars / .env</strong></td>
-<td>Configuração central</td>
-<td><code>envsubst</code> / <code>env.yaml</code></td>
-<td>Mantém segredos e URLs de serviços separados do código-fonte.</td>
-</tr>
-<tr class="even">
-<td><strong>Validação final</strong></td>
-<td>Teste do deploy</td>
-<td><code>gcloud pubsub topics publish</code>,
-<code>gcloud functions logs read</code></td>
-<td>Confirma que a comunicação entre serviços e funções está
-funcionando.</td>
-</tr>
-</tbody>
-</table>
-<hr />
+<ul>
+<li><strong>Autenticação com SA</strong>
+<ul>
+<li>Propósito: Garantir que scripts e deploys usem credenciais
+corretas</li>
+<li>Ferramenta / Comando:
+<code>gcloud auth activate-service-account --key-file=KEY.json</code></li>
+<li>Motivação / Visão: Evita usar credenciais de usuário e garante
+automação segura.</li>
+</ul></li>
+<li><strong>Habilitar APIs necessárias</strong>
+<ul>
+<li>Propósito: Disponibilizar serviços GCP para o projeto</li>
+<li>Ferramenta / Comando:
+<code>gcloud services enable appengine.googleapis.com ...</code></li>
+<li>Motivação / Visão: Sem APIs habilitadas, recursos como Cloud SQL,
+Cloud Functions e Artifact Registry não funcionam.</li>
+</ul></li>
+<li><strong>Criar Cloud SQL</strong>
+<ul>
+<li>Propósito: Banco de dados PostgreSQL</li>
+<li>Ferramenta / Comando:
+<code>gcloud sql instances create ...</code></li>
+<li>Motivação / Visão: Armazenamento persistente de dados do Feedback
+App.</li>
+</ul></li>
+<li><strong>Criar Artifact Registry</strong>
+<ul>
+<li>Propósito: Repositório de imagens Docker</li>
+<li>Ferramenta / Comando:
+<code>gcloud artifacts repositories create ...</code></li>
+<li>Motivação / Visão: Necessário para push/pull de imagens Docker
+usadas pelo App Engine.</li>
+</ul></li>
+<li><strong>Criar App Engine</strong>
+<ul>
+<li>Propósito: Hospedar a aplicação</li>
+<li>Ferramenta / Comando:
+<code>gcloud app create --region ...</code></li>
+<li>Motivação / Visão: Ambiente gerenciado para executar a aplicação e
+gerenciar escalabilidade automaticamente.</li>
+</ul></li>
+<li><strong>Build &amp; Push Docker</strong>
+<ul>
+<li>Propósito: Preparar imagem da aplicação</li>
+<li>Ferramenta / Comando: <code>docker build</code>,
+<code>docker tag</code>, <code>docker push</code></li>
+<li>Motivação / Visão: Centraliza a aplicação em um container versionado
+para deploy no GCP.</li>
+</ul></li>
+<li><strong>Deploy App Engine</strong>
+<ul>
+<li>Propósito: Colocar a aplicação em produção</li>
+<li>Ferramenta / Comando: <code>gcloud app deploy</code></li>
+<li>Motivação / Visão: Publicação final da aplicação com variáveis de
+ambiente configuradas.</li>
+</ul></li>
+<li><strong>Criar Tópicos Pub/Sub</strong>
+<ul>
+<li>Propósito: Comunicação assíncrona</li>
+<li>Ferramenta / Comando: <code>gcloud pubsub topics create</code></li>
+<li>Motivação / Visão: Permite desacoplar funções (Notify Admin, Weekly
+Report) do app principal.</li>
+</ul></li>
+<li><strong>Deploy Cloud Functions</strong>
+<ul>
+<li>Propósito: Funções serverless</li>
+<li>Ferramenta / Comando: <code>gcloud functions deploy</code></li>
+<li>Motivação / Visão: Automação de alertas e relatórios; funções podem
+escalar automaticamente.</li>
+</ul></li>
+<li><strong>Criar Cloud Scheduler Jobs</strong>
+<ul>
+<li>Propósito: Agendamento de tarefas</li>
+<li>Ferramenta / Comando:
+<code>gcloud scheduler jobs create pubsub</code></li>
+<li>Motivação / Visão: Garante execução semanal da função de
+relatórios.</li>
+</ul></li>
+<li><strong>EnvVars / .env</strong>
+<ul>
+<li>Propósito: Configuração central</li>
+<li>Ferramenta / Comando: <code>envsubst</code> /
+<code>env.yaml</code></li>
+<li>Motivação / Visão: Mantém segredos e URLs de serviços separados do
+código-fonte.</li>
+</ul></li>
+<li><strong>Validação final</strong>
+<ul>
+<li>Propósito: Teste do deploy</li>
+<li>Ferramenta / Comando: <code>gcloud pubsub topics publish</code>,
+<code>gcloud functions logs read</code></li>
+<li>Motivação / Visão: Confirma que a comunicação entre serviços e
+funções está funcionando.</li>
+</ul></li>
+</ul>
 <h2 id="motivo-geral-da-arquitetura-e-automação">Motivo geral da
 arquitetura e automação</h2>
 <ol type="1">
@@ -689,11 +733,11 @@ do Repositório e Atualização com Submodules</h2>
 pode usar <strong>SSH</strong> ou <strong>HTTPS</strong>, dependendo de
 como suas chaves/credenciais estão configuradas:</p>
 <h3 id="clonando-via-ssh">Clonando via SSH</h3>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="at">--recurse-submodules</span> git@github.com:gabriel-dears/fiap-adj8-feedback-platform.git</span></code></pre></div>
-<h3 id="clonando-via-https">Clonando via HTTPS</h3>
 <div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="at">--recurse-submodules</span> https://github.com/gabriel-dears/fiap-adj8-feedback-platform.git</span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="at">--recurse-submodules</span> git@github.com:gabriel-dears/fiap-adj8-feedback-platform.git</span></code></pre></div>
+<h3 id="clonando-via-https">Clonando via HTTPS</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="at">--recurse-submodules</span> https://github.com/gabriel-dears/fiap-adj8-feedback-platform.git</span></code></pre></div>
 <p><strong>⚠️ O parâmetro –recurse-submodules garante que todos os
 submodules do projeto também sejam clonados
 automaticamente.</strong></p>
@@ -702,15 +746,25 @@ automaticamente.</strong></p>
 Repositório com Submodules</h2>
 <p>Depois de já ter o repositório clonado, para atualizar o código
 principal e todos os submodules, use:</p>
-<div class="sourceCode" id="cb3"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull <span class="at">--recurse-submodules</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> submodule update <span class="at">--remote</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull <span class="at">--recurse-submodules</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> submodule update <span class="at">--remote</span></span></code></pre></div>
 <ul>
 <li><p><strong>git pull –recurse-submodules:</strong> Atualiza o branch
 principal e verifica se os submodules têm commits novos.</p></li>
 <li><p><strong>git submodule update –remote:</strong> Sincroniza os
 submodules com os commits mais recentes dos repositórios
 remotos.</p></li>
+</ul>
+<h2 id="link-para-o-github">Link para o GitHub:</h2>
+<ul>
+<li><strong><a
+href="https://github.com/gabriel-dears/fiap-adj8-feedback-platform">https://github.com/gabriel-dears/fiap-adj8-feedback-platform</a></strong></li>
+</ul>
+<h2 id="vídeo-de-apresentação">Vídeo de apresentação</h2>
+<ul>
+<li><strong><a
+href="https://drive.google.com/file/d/1IAia4uFERwWyZAtmCtmC5Ki3TJ0W3r2r/view?usp=sharing">https://drive.google.com/file/d/1IAia4uFERwWyZAtmCtmC5Ki3TJ0W3r2r/view?usp=sharing</a></strong></li>
 </ul>
 </body>
 </html>
